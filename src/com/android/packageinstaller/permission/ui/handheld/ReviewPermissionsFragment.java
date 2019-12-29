@@ -197,27 +197,29 @@ public final class ReviewPermissionsFragment extends PreferenceFragmentCompat
         for (int groupNum = 0; groupNum < preferenceGroupCount; groupNum++) {
             final PreferenceGroup preferenceGroup = preferenceGroups.get(groupNum);
 
-            final int preferenceCount = preferenceGroup.getPreferenceCount();
-            for (int prefNum = 0; prefNum < preferenceCount; prefNum++) {
-                Preference preference = preferenceGroup.getPreference(prefNum);
-                if (preference instanceof PermissionReviewPreference) {
-                    PermissionReviewPreference permPreference =
-                            (PermissionReviewPreference) preference;
-                    AppPermissionGroup group = permPreference.getGroup();
+            if(preferenceGroup != null){
+                final int preferenceCount = preferenceGroup.getPreferenceCount();
+                for (int prefNum = 0; prefNum < preferenceCount; prefNum++) {
+                    Preference preference = preferenceGroup.getPreference(prefNum);
+                    if (preference instanceof PermissionReviewPreference) {
+                        PermissionReviewPreference permPreference =
+                                (PermissionReviewPreference) preference;
+                        AppPermissionGroup group = permPreference.getGroup();
 
-                    // If the preference wasn't toggled we show it as "granted"
-                    if (group.isReviewRequired() && !permPreference.wasChanged()) {
-                        grantReviewedPermission(group);
-                    }
-                    logReviewPermissionsFragmentResult(changeIdForLogging, group);
-
-                    AppPermissionGroup backgroundGroup = group.getBackgroundPermissions();
-                    if (backgroundGroup != null) {
-                        // If the preference wasn't toggled we show it as "fully granted"
-                        if (backgroundGroup.isReviewRequired() && !permPreference.wasChanged()) {
-                            grantReviewedPermission(backgroundGroup);
+                        // If the preference wasn't toggled we show it as "granted"
+                        if (group.isReviewRequired() && !permPreference.wasChanged()) {
+                            grantReviewedPermission(group);
                         }
-                        logReviewPermissionsFragmentResult(changeIdForLogging, backgroundGroup);
+                        logReviewPermissionsFragmentResult(changeIdForLogging, group);
+
+                        AppPermissionGroup backgroundGroup = group.getBackgroundPermissions();
+                        if (backgroundGroup != null) {
+                            // If the preference wasn't toggled we show it as "fully granted"
+                            if (backgroundGroup.isReviewRequired() && !permPreference.wasChanged()) {
+                                grantReviewedPermission(backgroundGroup);
+                            }
+                            logReviewPermissionsFragmentResult(changeIdForLogging, backgroundGroup);
+                        }
                     }
                 }
             }
